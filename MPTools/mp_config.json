@@ -1,0 +1,4 @@
+{
+	"sponsors": {"MLA":12345, "MLB":6789},
+	"messages": [{"status":200, "message":"payment_approved"}]
+}
