@@ -1,0 +1,14 @@
+{
+	"standard_payment": {
+		"shipment": {},
+		"payer": {}
+	},
+	"custom_payment": {
+		"shipment": {},
+		"payer": {}
+	},
+	"ticket_payment": {
+		"shipment": {},
+		"payer": {}
+	}
+}

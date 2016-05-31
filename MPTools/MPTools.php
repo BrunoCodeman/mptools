@@ -1,12 +1,13 @@
 <?php
 require_once './MPTools/IMPTools.php';
+require_once './MPTools/lib/mercadopago.php';
 class MPTools implements IMPTools {
 	private $mp;
 	private $config;
 	private $accepted_status = array(201, 200);
 	function __construct() {
-		$this->config = json_decode(file_get_contents("mp_config.json"));
-		$this->status_messages = json_decode(file_get_contents("status_messages.json"));
+		$this->config = json_decode(file_get_contents(getcwd() . "/MPTools/mp_config.json"));
+		$this->status_messages = json_decode(file_get_contents(getcwd() . "/MPTools/status_messages.json"));
 
 		$num_args = func_num_args();
 		if ($num_args == 2) {

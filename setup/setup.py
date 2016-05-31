@@ -1,5 +1,5 @@
 #coding: utf-8
-#TODO: Implementar aqui scripts de instalação e configuração do Composer e PHPUnit no MAMP.
+#Script to install and configure PHPUnit and Composer with MAMP 
 import os
 import json
 import platform
