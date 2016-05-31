@@ -1,5 +1,5 @@
 {
-	"PHP_VERSION": "ls /Applications/MAMP/bin/php/ | sort -n | tail -5 | head -1",
+	"PHP_VERSION": "php5.3.29",
 	"PHP_PATH": "/Applications/MAMP/bin/php/${PHP_VERSION}/",
 	"COMPOSER_URL": "https://getcomposer.org/installer",
 	"COMPOSER_PATH":"/Applications/MAMP/bin/php/${PHP_VERSION}/bin/composer.phar",

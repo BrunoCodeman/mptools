@@ -14,19 +14,17 @@ else:
 	bash_file = "/Users/%s/.bash_profile" % user
 bash_file_content = open(bash_file).read()
 
-
 def setup():
 	#dict vars
 	config = json.loads(open('config.json', 'r').read())
 	#string vars
-	php_version = execute_command(config['PHP_VERSION']).strip()
-	path = config['PATH'].replace("${PHP_VERSION}", php_version)
+	path = config['PATH'].replace("${PHP_VERSION}", config['PHP_VERSION']).replace("$PATH",os.environ['PATH'])
 	navigate_command = "cd %s" % config['PHP_PATH']
 	curl_command = "curl -sS %s | php" % config['COMPOSER_URL']
-	composer_path = config['COMPOSER_PATH'].replace("${PHP_VERSION}", php_version)
+	composer_path = config['COMPOSER_PATH'].replace("${PHP_VERSION}", config['PHP_VERSION'])
 	#list vars
-	env_vars = ['PHP_VERSION=%s' % php_version,
-				"alias composer='php %s'" % config['COMPOSER_PATH'].replace("${PHP_VERSION}", php_version),
+	env_vars = ['PHP_VERSION=%s' % config['PHP_VERSION'],
+				"alias composer='php %s'" % config['COMPOSER_PATH'].replace("${PHP_VERSION}", config['PHP_VERSION']),
 				"export PATH=%s" % path]
 	
 	for env_var in env_vars:
@@ -44,8 +42,6 @@ def setup():
 	execute_command('source %s' % bash_file)
 	print('setup complete!')
 
-
-
 def add_env_variable(env_var):
 	command = 'echo "\n%s" >> %s && source %s' % (env_var, bash_file, bash_file)
 	print('\n Executing %s \n\n' % command)
@@ -55,8 +51,9 @@ def composer_is_installed(composer_path):
 	already_installed = False
 	try:
 		print('\n looking for Composer in path %s' % composer_path)
-		f = open(composer_path, 'r') 
+		f = open(composer_path, 'r')
 		already_installed = f is not None
+		print("Composer is already installed. Skipping installation")
 	except Exception, e:
 		print('Composer not installed.')
 	return already_installed

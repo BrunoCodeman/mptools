@@ -12,6 +12,7 @@ public class MPTools implements IMPTools
 		$num_args = func_num_args();
 		if ($num_args == 2) {
 			$this->mp = new MP(func_get_args(0), func_get_args(1));
+			return;
 		}
 
 		if ($num_args == 1) {
@@ -23,7 +24,7 @@ public class MPTools implements IMPTools
 		}
 	}
 
-	public function createPaymentStandard(array $preference, $country)
+	public function createStandardPayment(array $preference, $country)
 	{
 		$after_process = array('status' => 0, 'message' => "" );
 		if (strpos($preference['payer']['email'], '@testuser.com') === false) {
@@ -44,11 +45,9 @@ public class MPTools implements IMPTools
 		{
 			return $after_process;
 		}
-		
-		
-	
 	}
-	public function createPaymentCustom(array $payment);
+	public function createCustomPayment(array $payment);
+	public function createTicketPayment(array $payment);
 	public function getPaymentDetails($paymentId);
 	public function createCustomerCard(array $card);
 	public function getCustomerCards($userId);
