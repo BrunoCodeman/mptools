@@ -1,13 +1,12 @@
-<?php 
-
-public class MPTools implements IMPTools
-{
+<?php
+require_once './MPTools/IMPTools.php';
+class MPTools implements IMPTools {
 	private $mp;
 	private $config;
 	private $accepted_status = array(201, 200);
-	function __construct() 
-	{
+	function __construct() {
 		$this->config = json_decode(file_get_contents("mp_config.json"));
+		$this->status_messages = json_decode(file_get_contents("status_messages.json"));
 
 		$num_args = func_num_args();
 		if ($num_args == 2) {
@@ -17,43 +16,58 @@ public class MPTools implements IMPTools
 
 		if ($num_args == 1) {
 			$this->mp = new MP(func_get_args(0));
-		}
-		else
-		{	
+		} else {
 			throw new Exception("Error creating MPTools: Invalid credentials", 1);
 		}
 	}
 
-	public function createStandardPayment(array $preference, $country)
-	{
-		$after_process = array('status' => 0, 'message' => "" );
+	public function createStandardPayment(array $preference, $sandbox) {
+		$after_process = array('status' => 0, 'message' => "");
 		if (strpos($preference['payer']['email'], '@testuser.com') === false) {
-			$preference["sponsor_id"] = $this->config['sponsors'][$country];
+			$preference["sponsor_id"] = $this->config['country'];
 		}
-		try 
+		try
 		{
-			$preferenceResult = $mp->create_preference($preference);	
+			$mp->sandbox_mode($sandbox);
+			$preferenceResult = $mp->create_preference($preference);
 			$after_process['status'] = $preferenceResult['status'];
 			$after_process['message'] = $this->getMessage($preferenceResult['status']);
-		} 
-		catch (Exception $e) 
-		{
+			return $after_process;
+		} catch (Exception $e) {
 			$after_process['status'] = 500;
 			$after_process['message'] = $e->getMessage();
-		}
-		finally
-		{
 			return $after_process;
 		}
 	}
-	public function createCustomPayment(array $payment);
-	public function createTicketPayment(array $payment);
-	public function getPaymentDetails($paymentId);
-	public function createCustomerCard(array $card);
-	public function getCustomerCards($userId);
-	public function createCustomer(array $user);
-	public function getCustomer($userId);
-	public function getCustomerID($userEmail);
-	public function getPaymentMethods($country);
-	public function getMessage($status);
+
+	public function createCustomPayment(array $payment) {
+		try {
+			if (strpos($preference['payer']['email'], '@testuser.com') === false) {
+				$preference["sponsor_id"] = $this->config['country'];
+			}
+
+			$payment_json = json_decode($payment_data);
+			$accepted_status = array('approved', "in_process");
+			$payment_response = $this->mp->create_payment($payment_json);
+			$json_response = array('status' => null, 'message' => null);
+
+			if (in_array($payment_response['response']['status'], $accepted_status)) {
+				$json_response['status'] = $payment_response['response']['status'];
+			} else {
+				$json_response['status'] = $payment_response['response']['status_detail'];
+			}
+			return $json_response;
+		} catch (Exception $e) {
+			echo json_encode(array("status" => $e->getCode(), "message" => $e->getMessage()));
+		}}
+	public function createTicketPayment(array $payment) {}
+	public function getPaymentDetails($paymentId) {}
+	public function createCustomerCard(array $card) {}
+	public function getCustomerCards($userId) {}
+	public function createCustomer(array $user) {}
+	public function getCustomer($userId) {}
+	public function getCustomerID($userEmail) {}
+	public function getPaymentMethods($country) {}
+	public function getMessage($status) {}
+
 }

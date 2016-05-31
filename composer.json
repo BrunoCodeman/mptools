@@ -1,11 +1,15 @@
 {
     "require-dev": {
-        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-0": {"": "src"}
     },
     "config": {
         "bin-dir": "bin"
+    },
+    "require": {
+        "phpunit/phpunit": "^4.8",
+        "phpunit/php-invoker": "^4.8",
+        "phpunit/dbunit": ">=1.2"
     }
 }

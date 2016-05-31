@@ -15,17 +15,26 @@ else:
 bash_file_content = open(bash_file).read()
 
 def setup():
-	#dict vars
+	#configuration vars
 	config = json.loads(open('config.json', 'r').read())
+	
 	#string vars
 	path = config['PATH'].replace("${PHP_VERSION}", config['PHP_VERSION']).replace("$PATH",os.environ['PATH'])
-	navigate_command = "cd %s" % config['PHP_PATH']
-	curl_command = "curl -sS %s | php" % config['COMPOSER_URL']
-	composer_path = config['COMPOSER_PATH'].replace("${PHP_VERSION}", config['PHP_VERSION'])
+	php_path = config['PHP_PATH'].replace("${PHP_VERSION}", config['PHP_VERSION'])
+	navigate_command = "cd %s" % php_path
+	
 	#list vars
 	env_vars = ['PHP_VERSION=%s' % config['PHP_VERSION'],
 				"alias composer='php %s'" % config['COMPOSER_PATH'].replace("${PHP_VERSION}", config['PHP_VERSION']),
+				"alias phpunit='php %s'" % config['PHPUNIT_PATH'].replace("${PHP_VERSION}", config['PHP_VERSION']),
 				"export PATH=%s" % path]
+	
+	#dict vars
+	commands = dict(composer="curl -sS %s > %s/composer.phar | php" % (config['COMPOSER_URL'], php_path), 
+				phpunit="curl -sS %s > %s/phpunit.phar | php" % (config['PHPUNIT_URL'], php_path))
+	
+	phar_paths = dict(composer=config['COMPOSER_PATH'].replace("${PHP_VERSION}", config['PHP_VERSION']),
+				  phpunit=config['PHPUNIT_PATH'].replace("${PHP_VERSION}", config['PHP_VERSION']))
 	
 	for env_var in env_vars:
 		if not already_has_system_var(env_var):
@@ -34,11 +43,11 @@ def setup():
 		else:
 			print('\n environment variable "%s" already created' % env_var)
 	
+	for name, file_path in phar_paths.items():
+		if not is_installed(name, file_path):
+			print('\n Executing %s at folder %s \n\n' %  (commands[name], navigate_command))
+			execute_command("%s && %s" % (navigate_command, commands[name]))
 
-	if not composer_is_installed(composer_path):
-		print('\n Executing %s \n\n' %  curl_command)
-		execute_command("%s && %s" % (navigate_command, curl_command))
-	
 	execute_command('source %s' % bash_file)
 	print('setup complete!')
 
@@ -47,15 +56,15 @@ def add_env_variable(env_var):
 	print('\n Executing %s \n\n' % command)
 	execute_command(command)	
 
-def composer_is_installed(composer_path):
+def is_installed(dependency_name, dependency_path):
 	already_installed = False
 	try:
-		print('\n looking for Composer in path %s' % composer_path)
-		f = open(composer_path, 'r')
+		print('\n Looking for %s installation in path %s' % (dependency_name, dependency_path))
+		f = open(dependency_path, 'r')
 		already_installed = f is not None
-		print("Composer is already installed. Skipping installation")
+		print("%s is already installed. Skipping installation" % dependency_name)
 	except Exception, e:
-		print('Composer not installed.')
+		print('%s not installed. Installing' % dependency_name)
 	return already_installed
 
 def already_has_system_var(system_var):
