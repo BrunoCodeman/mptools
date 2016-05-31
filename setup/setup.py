@@ -1,0 +1,1 @@
+#TODO: Implementar aqui scripts de instalação e configuração do Composer e PHPUnit no MAMP.
