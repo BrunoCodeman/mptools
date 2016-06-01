@@ -2,7 +2,7 @@
     "require-dev": {
     },
     "autoload": {
-        "psr-0": {"": "src"}
+        "classmap": ["vendor", "MPTools", "tests"]
     },
     "config": {
         "bin-dir": "bin"

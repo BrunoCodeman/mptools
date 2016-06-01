@@ -1,6 +1,5 @@
 <?php
-require_once './MPTools/IMPTools.php';
-require_once './MPTools/lib/mercadopago.php';
+
 class MPTools implements IMPTools {
 	private $mp;
 	private $config;
@@ -11,26 +10,23 @@ class MPTools implements IMPTools {
 
 		$num_args = func_num_args();
 		if ($num_args == 2) {
-			$this->mp = new MP(func_get_args(0), func_get_args(1));
-			return;
-		}
-
-		if ($num_args == 1) {
+			$this->mp = new MP(func_get_arg(0), func_get_arg(1));
+		}elseif($num_args == 1) {
 			$this->mp = new MP(func_get_args(0));
 		} else {
 			throw new Exception("Error creating MPTools: Invalid credentials", 1);
 		}
 	}
 
-	public function createStandardPayment(array $preference, $sandbox) {
+	public function createStandardPayment($preference, $sandbox) {
 		$after_process = array('status' => 0, 'message' => "");
-		if (strpos($preference['payer']['email'], '@testuser.com') === false) {
-			$preference["sponsor_id"] = $this->config['country'];
+		if (strpos($preference->payer->email, '@testuser.com') === false) {
+			$preference->sponsor_id = $this->config['country'];
 		}
 		try
 		{
-			$mp->sandbox_mode($sandbox);
-			$preferenceResult = $mp->create_preference($preference);
+			$this->mp->sandbox_mode($sandbox);
+			$preferenceResult = $this->mp->create_preference($preference);
 			$after_process['status'] = $preferenceResult['status'];
 			$after_process['message'] = $this->getMessage($preferenceResult['status']);
 			return $after_process;
@@ -41,7 +37,7 @@ class MPTools implements IMPTools {
 		}
 	}
 
-	public function createCustomPayment(array $payment) {
+	public function createCustomPayment($payment) {
 		try {
 			if (strpos($preference['payer']['email'], '@testuser.com') === false) {
 				$preference["sponsor_id"] = $this->config['country'];
@@ -61,11 +57,11 @@ class MPTools implements IMPTools {
 		} catch (Exception $e) {
 			echo json_encode(array("status" => $e->getCode(), "message" => $e->getMessage()));
 		}}
-	public function createTicketPayment(array $payment) {}
+	public function createTicketPayment($payment) {}
 	public function getPaymentDetails($paymentId) {}
-	public function createCustomerCard(array $card) {}
+	public function createCustomerCard($card) {}
 	public function getCustomerCards($userId) {}
-	public function createCustomer(array $user) {}
+	public function createCustomer($user) {}
 	public function getCustomer($userId) {}
 	public function getCustomerID($userEmail) {}
 	public function getPaymentMethods($country) {}
