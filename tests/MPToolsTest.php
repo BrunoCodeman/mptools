@@ -23,6 +23,8 @@ class MPToolsTest extends PHPUnit_Framework_TestCase {
 		//usar como bootstrap do projeto. Fazer o mesmo para customers & cards nos testes de processo de criar/obter cartão e user 
 	}
 
+	public function testMustConvertObjectToPreference(){}
+
 	public function tearDown() {}
 
 }

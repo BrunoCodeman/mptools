@@ -12,5 +12,6 @@ interface IMPTools {
 	public function getCustomerID($userEmail);
 	public function getPaymentMethods($country);
 	public function getMessage($status);
+	public function mapObject($jsonOrderObject);
 
 }

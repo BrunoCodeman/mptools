@@ -5,8 +5,9 @@ class MPTools implements IMPTools {
 	private $config;
 	private $accepted_status = array(201, 200);
 	function __construct() {
-		$this->config = json_decode(file_get_contents(getcwd() . "/MPTools/mp_config.json"));
-		$this->status_messages = json_decode(file_get_contents(getcwd() . "/MPTools/status_messages.json"));
+		$this->baseDir = getcwd() . "//MPTools//";
+		$this->config = json_decode(file_get_contents($this->baseDir . "mp_config.json"));
+		$this->status_messages = json_decode(file_get_contents($this->baseDir . "status_messages.json"));
 
 		$num_args = func_num_args();
 		if ($num_args == 2) {
@@ -21,7 +22,7 @@ class MPTools implements IMPTools {
 	public function createStandardPayment($preference, $sandbox) {
 		$after_process = array('status' => 0, 'message' => "");
 		if (strpos($preference->payer->email, '@testuser.com') === false) {
-			$preference->sponsor_id = $this->config['country'];
+			$preference->sponsor_id = $this->config['sponsors']['country'];
 		}
 		try
 		{
@@ -66,5 +67,9 @@ class MPTools implements IMPTools {
 	public function getCustomerID($userEmail) {}
 	public function getPaymentMethods($country) {}
 	public function getMessage($status) {}
+	public function mapObject($jsonOrderObject)
+	{
+		$mapper = json_decode(file_get_contents($this->baseDir . "dataMapper.json"));
+	}
 
 }
