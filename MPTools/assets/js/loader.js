@@ -2,11 +2,19 @@
   $(document).ready(function () {
            $('select').material_select();
            $('#cardExpirationMonth').pickadate({
-            selectMonths: true, // Creates a dropdown to control month
-            });
+            selectMonths: true,
+            selectYears: false,
+            selectDays: false,
+            closeOnSelect: true,
+            closeOnClear: true,
+            format: 'm', 
+            });  
            $('#cardExpirationYear').pickadate({
-            selectYears: true, // Creates a dropdown to control month
-            selectMonths: false, // Creates a dropdown to control month
-            selectDays: false, // Creates a dropdown to control month
+            selectMonths: false,
+            selectYears: true,
+            selectDays: false,
+            closeOnSelect: true,
+            closeOnClear: true,
+            format: 'yy',
             });
            });
