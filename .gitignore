@@ -1,2 +1,3 @@
- MPTools/assets/js/node_modules/*
- MPTools/assets/js/typings/*
+MPTools/assets/js/node_modules/
+MPTools/assets/js/typings/
+ MPTools/assets/js/npm-debug.log
