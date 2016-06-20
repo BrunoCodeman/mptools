@@ -1,5 +1,7 @@
 <?php
 
+namespace MercadoPago\MPFramework\MPTools;
+
 class MPTools implements IMPTools {
 	private $mp;
 	private $config;
@@ -57,12 +59,38 @@ class MPTools implements IMPTools {
 			return $json_response;
 		} catch (Exception $e) {
 			echo json_encode(array("status" => $e->getCode(), "message" => $e->getMessage()));
-		}}
-	public function createTicketPayment($payment) {}
-	public function getPaymentDetails($paymentId) {}
-	public function createCustomerCard($card) {}
-	public function getCustomerCards($userId) {}
-	public function createCustomer($user) {}
+		}
+	}
+
+	public function createTicketPayment($payment)
+	{
+		return $this->createCustomPayment($payment);
+	}
+
+	public function getPaymentDetails($paymentId)
+	{
+		return $this->mp->get_payment_info($paymentId);
+	}
+
+	public function createCustomerCard($cardToken, $customerId) {
+		$card = $his->mp->post("/v1/customers/" . $customerId . "/cards", array("token" => $token));
+		return $card;
+	}
+	public function getCustomerCards($userId) {
+		$retorno = null;
+		$cards = $this->mp->get("/v1/customers/" . $userId . "/cards");
+		if (array_key_exists("response", $cards) && sizeof($cards["response"]) > 0) {
+			$retorno = $cards["response"];
+		}
+		return $retorno;
+	}
+
+	public function createCustomer($userEmail) {
+			$customer = array('email' => $userEmail);
+			$uri = '/v1/customers/';
+			$response = $this->mp->post($uri, $customer);
+			return $response;
+	}
 	public function getCustomer($userId) {}
 	public function getCustomerID($userEmail) {}
 	public function getPaymentMethods($country) {}
@@ -70,6 +98,12 @@ class MPTools implements IMPTools {
 	public function mapObject($jsonOrderObject)
 	{
 		$mapper = json_decode(file_get_contents($this->baseDir . "dataMapper.json"));
+		$mappedObject = array('' => , );
+
+		foreach ($mapper as $key => $value) {
+			$mappedObject[$key] = eval('return $jsonOrderObject' . $value . ';');
+		}
+
 	}
 
 }
