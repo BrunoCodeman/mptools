@@ -2,6 +2,8 @@
 
 namespace MercadoPago\MPFramework\MPTools;
 
+use MercadoPago\MPFramework\MPTools\IMPTools;
+
 class MPTools implements IMPTools {
 	private $mp;
 	private $config;
@@ -20,7 +22,10 @@ class MPTools implements IMPTools {
 			throw new Exception("Error creating MPTools: Invalid credentials", 1);
 		}
 	}
-
+	public function getSdk()
+	{
+		return $this->mp;
+	}
 	public function createStandardPayment($preference, $sandbox) {
 		$after_process = array('status' => 0, 'message' => "");
 		if (strpos($preference->payer->email, '@testuser.com') === false) {
@@ -91,14 +96,31 @@ class MPTools implements IMPTools {
 			$response = $this->mp->post($uri, $customer);
 			return $response;
 	}
-	public function getCustomer($userId) {}
-	public function getCustomerID($userEmail) {}
-	public function getPaymentMethods($country) {}
+
+	public function getCustomer($userId) 
+	{
+
+	}
+	
+	public function getCustomerID($userEmail){
+		$customer = array('email' => $userEmail);
+		$search_uri = "/v1/customers/search";
+		$response = $this->mp->get($search_uri, $customer);
+		$has_results_key = array_key_exists("results", $response["response"]);
+		$has_results_values = sizeof($response["response"]["results"]) > 0;
+		return ($has_results_key && $has_results_values ) ?
+		$response["response"]["results"][0]["id"] : $this->createCustomer($userEmail)["response"]["id"];
+	}
+	
+	public function getPaymentMethods($country)
+	{
+
+	}
 	public function getMessage($status) {}
 	public function mapObject($jsonOrderObject)
 	{
 		$mapper = json_decode(file_get_contents($this->baseDir . "dataMapper.json"));
-		$mappedObject = array('' => , );
+		$mappedObject = array('' => "" );
 
 		foreach ($mapper as $key => $value) {
 			$mappedObject[$key] = eval('return $jsonOrderObject' . $value . ';');

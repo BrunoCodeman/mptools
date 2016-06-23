@@ -1,4 +1,5 @@
 <?php
+namespace MercadoPago\MPFramework\MPTools;
 
 interface IMPTools {
 	public function createStandardPayment($preference, $sandbox);

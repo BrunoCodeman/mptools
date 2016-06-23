@@ -4,10 +4,9 @@ require_once './MPTools/MPTools.php';
 /**
 * 
 */
-class BaseTest implements IBaseTest extends PHPUnit_Framework_TestCase
-{
+class BaseTest extends PHPUnit_Framework_TestCase implements IBaseTest  {
     
-    function __construct(argument)
+    function __construct($argument)
     {
         # code...
     }

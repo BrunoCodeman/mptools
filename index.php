@@ -2,13 +2,18 @@
 <html>
 <head>
     <title>MP Checkout Tools</title>
-    <style type="text/css">
+ <link rel="stylesheet" type="text/css" href="https://rawgit.com/FreddyFY/material-datepicker/master/dist/material-datepicker.css">
+  <script type="text/javascript" src="https://rawgit.com/FreddyFY/material-datepicker/master/dist/material-datepicker-with-moment-js.min.js"></script>
+  
+
+  
+    <!--<style type="text/css">
   .picker__table th:nth-child(6), .picker__table th:nth-child(7),
 .picker__table td:nth-child(6), .picker__table td:nth-child(7) {
     display: none;
     visibility: hidden;
 }
-</style>
+</style>-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
 </head>
@@ -27,7 +32,7 @@
            <label for="cardExpirationMonth">Expiration month</label>
        </div>
        <div class="input-field col s2">
-           <input type="text" id="cardExpirationYear" class="datepicker" data-checkout="cardExpirationYear"/>
+           <input type="text" id="cardExpirationYear" class="material-datepicker" data-checkout="cardExpirationYear"/>
            <label for="cardExpirationYear">Expiration year</label>
        </div>
        <div class="input-field col s2">
